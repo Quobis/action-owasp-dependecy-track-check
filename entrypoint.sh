@@ -1,16 +1,15 @@
 #!/bin/sh -l
 
-#DTRACK_URL=$1
-DTRACK_URL="https://dtrack.quobis.com"
-#DTRACK_KEY=$2
-DTRACK_KEY="rfmHTYrLrikmrTMAOqiEyLNjitQX0XOF"
-#LANGUAGE=$3
-LANGUAGE="golang"
-#VERSION=$4
+DTRACK_URL=$1
+#DTRACK_URL="https://dtrack.quobis.com"
+DTRACK_KEY=$2
+#DTRACK_KEY=""
+LANGUAGE=$3
+#LANGUAGE="golang"
 #JUST FOR TESTING
-GITHUB_REF="1.0"
-GITHUB_REPOSITORY="cona-hey3"
-GITHUB_WORKSPACE="/github/workflow"
+# GITHUB_REF="1.0"
+# GITHUB_REPOSITORY="cona-hey3"
+# GITHUB_WORKSPACE="/github/workflow"
 INSECURE="--insecure"
 #VERBOSE="--verbose"
 
