@@ -1,0 +1,28 @@
+# action.yml
+name: 'OWASP Dependency Track check'
+description: 'Creates BoM and upload repository to OWASP Dependency Track to find vulnerabilities'
+inputs:
+  url:  
+    description: 'URL of OWASP Dependency Track REST API'
+    required: true
+    default: 'https://dtrack.quobis.com/'
+  key:
+    description: 'Key to access OWASP Dependency Track REST API'
+    required: true
+    default: 'USEAVALIDKEY'
+  language:
+    description: 'Programming language'
+    required: true
+    default: 'nodejs'
+
+outputs:
+  riskscore:
+    description: 'String with the number of vulnerabilities found'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.url }}
+    - ${{ inputs.key }}
+    - ${{ inputs.language }}
