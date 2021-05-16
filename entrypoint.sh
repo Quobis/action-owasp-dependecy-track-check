@@ -1,12 +1,13 @@
 #!/bin/sh -l
 
 DTRACK_URL=$1
-#DTRACK_URL="https://dtrack.quobis.com"
 DTRACK_KEY=$2
-#DTRACK_KEY=""
 LANGUAGE=$3
-#LANGUAGE="golang"
+
 #JUST FOR TESTING
+# DTRACK_URL="https://dtrack.quobis.com"
+# DTRACK_KEY="rfmHTYrLrikmrTMAOqiEyLNjitQX0XOF"
+# LANGUAGE="golang"
 # GITHUB_REF="1.0"
 # GITHUB_REPOSITORY="cona-hey3"
 # GITHUB_WORKSPACE="/github/workflow"
@@ -16,6 +17,8 @@ INSECURE="--insecure"
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
+find=$(find / -name "cyclonedx-go")
+echo $find
 
 case $LANGUAGE in
     "nodejs")
@@ -46,7 +49,7 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
-        BoMResult=$($HOME/go/bin/cyclonedx-go -o bom.xml)
+        BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
     *)
         "[-] Project type not supported: $LANGUAGE"
