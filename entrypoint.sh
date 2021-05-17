@@ -33,7 +33,6 @@ case $LANGUAGE in
             exit 1
         fi
         BoMResult=$(cyclonedx-py -o bom.xml)
-        cat bom.xml
         ;;
     
     "golang")
