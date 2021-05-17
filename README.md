@@ -1,9 +1,15 @@
 # action-owasp-dependecy-track-check
-Github action to generate BoM and upload to OWASP dependency track to perform a vulnerability analysis. In order to use it you need an OWASP Dependency Track instance and an access Key to be able to use the REST API. 
-The project will be uploaded to the OWASP Denpendency Track server using the repository name as `project` and the branch or tag name as `version`. 
-We recommed to use the main version since we are not expecting to include breaking changes, however you can also use the version tags to use a fix version of the action which works fin in your environment. 
+This Github action generates a BoM (Bill Of Materials) of your project and uploads it to an OWASP Dependency Track instance to perform a vulnerability check. In order to use it, you will need an OWASP Dependency Track instance and an access Key to be able to use the REST API from Internet. 
 
-Any feedback, contributions, bug report and improvements issues are welcome. 
+One of the main advantages is that you can customize the vulnerability check sources Dependency Track will use, you can easily check the project status of the different versions using the Dependency Track WUI and you can also check the licenses of the different libraries you project is using. 
+
+The project will be uploaded to the OWASP Dependency Track server using the repository name as `project` and the branch or tag name as `version`.
+
+We recommend to use the version tags to chose the specific action version which works fine in your workflow and OWASP Dependency Track version. However the main branch can also be used since we are not expecting to include breaking changes in future versions. 
+
+**OWASP Dependency Track v4.0.1** has been successfully tested with tag **v0.1**. 
+
+Feedback, contributions, bug reports and improvements issues are really welcome. 
 
 ## Input variables
 This action requires 3 input variables:
