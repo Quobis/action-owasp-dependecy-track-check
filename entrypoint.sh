@@ -4,13 +4,6 @@ DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
 
-#JUST FOR TESTING
-# DTRACK_URL="https://dtrack.quobis.com"
-# DTRACK_KEY="rfmHTYrLrikmrTMAOqiEyLNjitQX0XOF"
-# LANGUAGE="golang"
-# GITHUB_REF="1.0"
-# GITHUB_REPOSITORY="cona-hey3"
-# GITHUB_WORKSPACE="/github/workflow"
 INSECURE="--insecure"
 #VERBOSE="--verbose"
 
