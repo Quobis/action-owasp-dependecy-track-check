@@ -26,7 +26,7 @@ jobs:
         uses:  Quobis/action-owasp-dependecy-track-check@main
         with:
           url: 'https://dtrack.quobis.com'
-          key: 'rfmikmrTMAOq2323EyLNji340XOF'
+          key: '${{ secrets.SECRET_OWASP_DT_KEY }}'
           language: 'golang'
       
       # Show the risk score output 

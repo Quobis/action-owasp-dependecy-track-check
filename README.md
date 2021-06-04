@@ -14,7 +14,7 @@ Feedback, contributions, bug reports and improvements issues are really welcome.
 ## Input variables
 This action requires 3 input variables:
 - **url**: URL of the OWASP Dependency Track server
-- **key**: KEY used to access the OWASP Dependency Track server, please not that this must no be appropiate for public repositories.
+- **key**: KEY used to access the OWASP Dependency Track server, please not that this must no be appropiate for public repositories. This key is confidencial information, so we recommend to [create a secret](https://docs.github.com/en/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository) in the project settings. In the action example we use the name `SECRET_OWASP_DT_KEY` for this secret.
 - **language**: (refer to the next section)
 
 ## Output variables
