@@ -1,6 +1,10 @@
 # action.yml
 name: 'OWASP Dependency Track check'
 description: 'Creates BoM and upload repository to OWASP Dependency Track to find vulnerabilities'
+branding:
+  icon: 'check-square'  
+  color: 'green'
+
 inputs:
   url:  
     description: 'URL of OWASP Dependency Track REST API'
@@ -26,3 +30,4 @@ runs:
     - ${{ inputs.url }}
     - ${{ inputs.key }}
     - ${{ inputs.language }}
+
