@@ -43,6 +43,18 @@ case $LANGUAGE in
         fi
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
+        
+    "php")
+        echo "[*]  Processing Php Composer BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Php build. Stopping the action!"
+            exit 1
+        fi
+        composer require --dev cyclonedx/cyclonedx-php-composer
+        path="bom.xml"
+        BoMResult=$(composer make-bom --output-file bom.xml --spec-version="1.1")
+        ;;
+
     *)
         "[-] Project type not supported: $LANGUAGE"
         exit 1
