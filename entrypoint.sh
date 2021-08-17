@@ -22,6 +22,7 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
+        path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
     
@@ -32,6 +33,7 @@ case $LANGUAGE in
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
+        path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ;;
     
@@ -41,8 +43,21 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
+        path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
+
+    "java")
+        echo "[*]  Processing Java BoM"
+
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Java build. Stopping the action!"
+            exit 1
+        fi
+        path="target/bom.xml"
+        BoMResult=$(mvn compile)
+        ;;
+    
     *)
         "[-] Project type not supported: $LANGUAGE"
         exit 1
@@ -64,7 +79,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@bom.xml")
+--form "bom=@$path")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
