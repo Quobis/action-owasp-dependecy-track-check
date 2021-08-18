@@ -53,8 +53,8 @@ case $LANGUAGE in
             echo "[-] Error executing Php build. Stopping the action!"
             exit 1
         fi
-        npm install
         composer require --dev cyclonedx/cyclonedx-php-composer
+        npm install
         path="bom.xml"
         BoMResult=$(composer make-bom --spec-version="1.1")
         cat bom.xml
