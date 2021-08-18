@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # using --no-install-recommends to reduce image size
 RUN apt-get update && apt-get install --no-install-recommends -y git nodejs npm \
-    python3 python3-pip golang curl jq php php-mbstring php-xml default-jre \
+    python3 python3-pip golang curl jq php php-mbstring php-xml default-jdk \
     && curl -sS "https://getcomposer.org/installer" -o composer-setup.php \
     && php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer \
     && apt-get update
