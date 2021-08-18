@@ -10,8 +10,6 @@ INSECURE="--insecure"
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
-find=$(find / -name "cyclonedx-go")
-echo $find
 
 case $LANGUAGE in
     "nodejs")
@@ -49,7 +47,6 @@ case $LANGUAGE in
 
     "java")
         echo "[*]  Processing Java BoM"
-
         if [ ! $? = 0 ]; then
             echo "[-] Error executing Java build. Stopping the action!"
             exit 1
