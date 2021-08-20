@@ -56,7 +56,11 @@ case $LANGUAGE in
         composer require --dev cyclonedx/cyclonedx-php-composer
         #npm install
         path="bom.xml"
+<<<<<<< HEAD
         #echo "Check that no bom.xml is in the folder now"
+=======
+        echo "Check that no bom.xml is in the folder now"
+>>>>>>> 0d5a129ec74a74af234551cc5de50524933bf8f3
         BoMResult=$(composer make-bom --spec-version="1.2")
         cat bom.xml
         ;;
