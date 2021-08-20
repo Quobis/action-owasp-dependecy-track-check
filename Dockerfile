@@ -5,7 +5,8 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # using --no-install-recommends to reduce image size
 RUN apt-get update && apt-get install --no-install-recommends -y git nodejs npm \
-python3 python3-pip golang curl jq ruby-dev build-essential
+    python3 python3-pip golang curl jq build-essential default-jdk maven ruby-dev
+
 
 # Installing Cyclone BoM generates for the different supported languages
 RUN npm install -g @cyclonedx/bom && pip install cyclonedx-bom \
