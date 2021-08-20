@@ -4,8 +4,9 @@ FROM ubuntu:focal
 ENV DEBIAN_FRONTEND noninteractive
 
 # using --no-install-recommends to reduce image size
-RUN apt-get update && apt-get install --no-install-recommends -y git nodejs npm \
-    python3 python3-pip golang curl jq php7.4 default-jdk \
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:ondrej/php \
+    && apt-get update && apt-get install --no-install-recommends -y git nodejs npm \
+    python3 python3-pip golang curl jq default-jdk php7.3 php7.3-xml php7.3-mbstring \
     && curl -sS "https://getcomposer.org/installer" -o composer-setup.php \
     && php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer \
     && apt-get update
