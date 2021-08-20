@@ -55,8 +55,7 @@ case $LANGUAGE in
         fi
         composer require --dev cyclonedx/cyclonedx-php-composer
         path="bom.xml"
-        BoMResult=$(composer make-bom --spec-version="1.1")
-        cat bom.xml
+        BoMResult=$(composer make-bom --spec-version="1.2")
         ;;
 
     *)
