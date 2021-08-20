@@ -57,7 +57,7 @@ case $LANGUAGE in
         #npm install
         path="bom.xml"
         #echo "Check that no bom.xml is in the folder now"
-        BoMResult=$(composer make-bom --spec-version="1.2")
+        BoMResult=$(composer make-bom --spec-version="1.1")
         cat bom.xml
         ;;
 
