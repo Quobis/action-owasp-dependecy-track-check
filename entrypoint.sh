@@ -77,7 +77,17 @@ case $LANGUAGE in
         # a directory which will be recursively analyzed for packages.config files
         BoMResult=$(dotnet CycloneDX . -o bom.xml)
         ;;
-
+        
+    "php")
+        echo "[*]  Processing Php Composer BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing Php build. Stopping the action!"
+            exit 1
+        fi
+        composer require --dev cyclonedx/cyclonedx-php-composer
+        path="bom.xml"
+        BoMResult=$(composer make-bom --spec-version="1.2")
+        ;;
 
     *)
         "[-] Project type not supported: $LANGUAGE"

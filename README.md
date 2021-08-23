@@ -27,7 +27,7 @@ Currently this action supports the generation of upload of projects devloped in 
 - **Ruby**: define the language variable as `ruby`. It will get the package information from Gemfile.lock. 
 - **Maven**: define the language variable as `java`. It will get the package information from pom.xml.
 - **NuGet (.NET)**: define the language variable as `dotnet`. It will get the package information from a .sln, .csproj, .vbproj, or packages.config file. 
-
+- **Php Composer**: define the language variable as `php`. It will get the package information from composer.json.
 
 
 Please note that if any of the files above is not available the action will fail when trying to generate the BoM files. 
