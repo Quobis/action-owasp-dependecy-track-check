@@ -64,7 +64,21 @@ case $LANGUAGE in
         path="target/bom.xml"
         BoMResult=$(mvn compile)
         ;;
-    
+        
+    "dotnet")
+        echo "[*]  Processing Golang BoM"
+        if [ ! $? = 0 ]; then
+            echo "[-] Error executing NuGet (Dotnet) build. Stopping the action!"
+            exit 1
+        fi
+        path="bom.xml/bom.xml"
+        dotnet tool install --global CycloneDX
+        # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
+        # a directory which will be recursively analyzed for packages.config files
+        BoMResult=$(dotnet CycloneDX . -o bom.xml)
+        ;;
+
+
     *)
         "[-] Project type not supported: $LANGUAGE"
         exit 1
