@@ -7,7 +7,7 @@ The project will be uploaded to the OWASP Dependency Track server using the repo
 
 We recommend to use the version tags to chose the specific action version which works fine in your workflow and OWASP Dependency Track version. However the main branch can also be used since we are not expecting to include breaking changes in future versions. 
 
-**OWASP Dependency Track v4.0.1** has been successfully tested with tag **v0.1**. 
+**OWASP Dependency Track v4.0.1** has been successfully tested with tags **v.1**, **v1.0**,**v1.1** and **1.2**. 
 
 Feedback, contributions, bug reports and improvements issues are really welcome. 
 
@@ -34,11 +34,11 @@ Please note that if any of the files above is not available the action will fail
 
 
 ## How to use it
-Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners.
+Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. 
 
 We also added an example of the `yaml` file which can be included in the workflow to use this action. You can fint the file in the `example-workflow` folder.
 
-For Maven projects, adding the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) to your project is mandatory.
+For Maven projects, adding the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) to your project is mandatory. This action will compile your project and expect to find a resulting `bom.xml`, which means you will also have to **change** the `phase` tag from `package` to `compile` inside the `executions` tag **cyclonedx-maven-plugin**.
 
 ## Development notes
 The repository files are mounted in the Dockerfile in `/github/workspace` directory. The script generates the BoM from those files and upload them to the OWASP Dependency Track specified as a parameter of the Action. After uploading the BoM it waits for the result and provides it as the output of the script. 
