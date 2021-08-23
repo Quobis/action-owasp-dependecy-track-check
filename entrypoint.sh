@@ -22,7 +22,7 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        path=$(bom.xml)
+        path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
     
@@ -33,7 +33,7 @@ case $LANGUAGE in
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
-        path=$(bom.xml)
+        path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ;;
     
@@ -43,7 +43,7 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
-        path=$(bom.xml)
+        path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
 
@@ -53,12 +53,11 @@ case $LANGUAGE in
             echo "[-] Error executing NuGet (Dotnet) build. Stopping the action!"
             exit 1
         fi
-        path=$(bom.xml)
-
+        path="bom.xml/bom.xml"
+        dotnet tool install --global CycloneDX
         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
         # a directory which will be recursively analyzed for packages.config files
         BoMResult=$(dotnet CycloneDX . -o bom.xml)
-        cat bom.xml
         ;;
 
     *)
