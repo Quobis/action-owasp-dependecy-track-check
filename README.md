@@ -36,6 +36,46 @@ Please note that if any of the files above is not available the action will fail
 ## How to use it
 Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. However, we've add some of the steps you'll have to go through in order to get it up and running.
 
+**Step 0: Add CycloneDX plugin to your project (only Maven/Java projects)**
++ Get the cyclonedx-maven-plugin. 
+From the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) repository you'll be able to get the code below. The default information of the plugin shown below is more extense (you could use the simplified one), but this will allow you to modify some useful parameters later on.
+```xml
+<plugin>
+        <groupId>org.cyclonedx</groupId>
+        <artifactId>cyclonedx-maven-plugin</artifactId>
+        <version>2.5.2</version>
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <goals>
+                    <goal>makeAggregateBom</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <projectType>library</projectType>
+            <schemaVersion>1.3</schemaVersion>
+            <includeBomSerialNumber>true</includeBomSerialNumber>
+            <includeCompileScope>true</includeCompileScope>
+            <includeProvidedScope>true</includeProvidedScope>
+            <includeRuntimeScope>true</includeRuntimeScope>
+            <includeSystemScope>true</includeSystemScope>
+            <includeTestScope>false</includeTestScope>
+            <includeLicenseText>false</includeLicenseText>
+            <outputFormat>all</outputFormat>
+            <outputName>bom</outputName>
+        </configuration>
+    </plugin>
+```
+
+
++ Edit your `pom.xml` file by adding the plugin. 
+Paste the code shown above into the `plugins` secction of your project's pom.xml. For more info visit [here](https://maven.apache.org/guides/mini/guide-configuring-plugins.html). 
+
+![alt text](./cyclonedx-maven-plugin%20install.png)
+
+Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
+
 **Step 1: Get your Dependency Track both URL and Key**
 
 This will let you use the API to upload your projects' bom.xml from this GitHub action.
@@ -89,45 +129,6 @@ We also added an example of the `yaml` file which can be included in the workflo
 
 + Commit changes to your repository `.workflow` directory. Once you finish don't forget to save and commit. This will trigger the workflow is first run as it's configure to start on every push.
 
-**Step 3: Add CycloneDX plugin to your project (only Maven/Java projects)**
-+ Get the cyclonedx-maven-plugin
-From the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) repository you'll be able to get the code below. The default information of the plugin shown below is more extense (you could use the simplified one), but this will allow you to modify some useful parameters later on.
-```xml
-<plugin>
-        <groupId>org.cyclonedx</groupId>
-        <artifactId>cyclonedx-maven-plugin</artifactId>
-        <version>2.5.2</version>
-        <executions>
-            <execution>
-                <phase>package</phase>
-                <goals>
-                    <goal>makeAggregateBom</goal>
-                </goals>
-            </execution>
-        </executions>
-        <configuration>
-            <projectType>library</projectType>
-            <schemaVersion>1.3</schemaVersion>
-            <includeBomSerialNumber>true</includeBomSerialNumber>
-            <includeCompileScope>true</includeCompileScope>
-            <includeProvidedScope>true</includeProvidedScope>
-            <includeRuntimeScope>true</includeRuntimeScope>
-            <includeSystemScope>true</includeSystemScope>
-            <includeTestScope>false</includeTestScope>
-            <includeLicenseText>false</includeLicenseText>
-            <outputFormat>all</outputFormat>
-            <outputName>bom</outputName>
-        </configuration>
-    </plugin>
-```
-
-
-+ Edit your `pom.xml` file by adding the plugin.
-Paste the code shown above into the `plugins` secction of your project's pom.xml. For more info visit [here](https://maven.apache.org/guides/mini/guide-configuring-plugins.html). 
-
-![alt text](./cyclonedx-maven-plugin%20install.png)
-
-Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
 
 ## Development notes
 The repository files are mounted in the Dockerfile in `/github/workspace` directory. The script generates the BoM from those files and upload them to the OWASP Dependency Track specified as a parameter of the Action. After uploading the BoM it waits for the result and provides it as the output of the script. 
