@@ -90,7 +90,7 @@ We also added an example of the `yaml` file which can be included in the workflo
 + Commit changes to your repository `.workflow` directory. Once you finish don't forget to save and commit. This will trigger the workflow is first run as it's configure to start on every push.
 
 **Step 3: Add CycloneDX plugin to your project (only Maven/Java projects)**
-* Get the cyclonedx-maven-plugin
++ Get the cyclonedx-maven-plugin
 From the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) repository you'll be able to get the code below. The default information of the plugin shown below is more extense (you could use the simplified one), but this will allow you to modify some useful parameters later on.
 ```xml
 <plugin>
