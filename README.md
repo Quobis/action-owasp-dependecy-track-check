@@ -34,7 +34,97 @@ Please note that if any of the files above is not available the action will fail
 
 
 ## How to use it
-Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. 
+Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. However, we've add some of the steps you'll have to go through in order to get it up and running.
+
+**Step 1: Get your Dependency Track both URL and Key**
+This will let you use the API to upload your projects' bom.xml from this GitHub action.
++ How to get your Key. Go to Configuration -> Teams -> Create Team to create a new team. This will also create a corresponding API Key, although a team might have multiple Keys. You can find more info about this [here](https://docs.dependencytrack.org/integrations/rest-api/).
+
+**Step 2: Set up your action.yml file**
++ Start by creating a `.github/workflows` directory in your repository if it doesn't already exist.
++ In this directory, create a file named `owasp-dt-check.yml`.
++ Copy the example shown below into your `owasp-dt-check.yml` file:
+  
+```yaml
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on: [push]
+
+  # Allows you to run this workflow manually from the Actions tab
+  # workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2 
+      
+      # Generates a BoM and uploads it to OWASP Dependency Track
+      - name: Generates BoM and upload to OWASP DTrack
+        id: riskscoreFromDT
+        uses:  Quobis/action-owasp-dependecy-track-check@main
+        with:
+          url: 'https://dtrack.quobis.com'
+          key: '${{ secrets.SECRET_OWASP_DT_KEY }}'
+          language: 'golang'
+      
+      # Show the risk score output 
+      - name: Get the output time
+        run: echo "The risk score of the project is ${{ steps.riskscoreFromDT.outputs.riskscore }}"
+```
+
+Don't forget to change the `url` `key` and `language` according to your project and Dependecy Track server. As you can see, we're using a secret to save our DT's user valid key. We strongly recommend you to do so.
+
++ Commit changes to your repository `.workflow` directory. Once you finish don't forget to save and commit. This will trigger the workflow is first run as it's configure to start on every push.
+
+**Step 3: Add CycloneDX plugin to your project (only Maven/Java projects)**
++ Get the cyclonedx-maven-plugin
+From the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) repository you'll be able to get the code below. The default information of the plugin shown below is more extense (you could use the simplified one), but this will allow you to modify some useful parameters later on.
+```xml
+<plugin>
+        <groupId>org.cyclonedx</groupId>
+        <artifactId>cyclonedx-maven-plugin</artifactId>
+        <version>2.5.2</version>
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <goals>
+                    <goal>makeAggregateBom</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <projectType>library</projectType>
+            <schemaVersion>1.3</schemaVersion>
+            <includeBomSerialNumber>true</includeBomSerialNumber>
+            <includeCompileScope>true</includeCompileScope>
+            <includeProvidedScope>true</includeProvidedScope>
+            <includeRuntimeScope>true</includeRuntimeScope>
+            <includeSystemScope>true</includeSystemScope>
+            <includeTestScope>false</includeTestScope>
+            <includeLicenseText>false</includeLicenseText>
+            <outputFormat>all</outputFormat>
+            <outputName>bom</outputName>
+        </configuration>
+    </plugin>
+```
+
+
++ Edit your `pom.xml` file by adding the plugin.
+Paste the code shown above into the `plugins` secction of your project's pom.xml. For more info visit [here](https://maven.apache.org/guides/mini/guide-configuring-plugins.html). 
+
+![alt text](./cyclonedx-maven-plugin%20install.png)
+
+Before saving, you must change the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
 
 We also added an example of the `yaml` file which can be included in the workflow to use this action. You can fint the file in the `example-workflow` folder.
 
