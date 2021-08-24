@@ -72,7 +72,9 @@ From the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-p
 + Edit your `pom.xml` file by adding the plugin. 
 Paste the code shown above into the `plugins` secction of your project's pom.xml. For more info visit [here](https://maven.apache.org/guides/mini/guide-configuring-plugins.html). 
 
-![alt text](./cyclonedx-maven-plugin%20install.png)
+![alt text](./docs/cyclonedx-maven-plugin%20install.png)
+
+![alt text](./example-action.yaml)
 
 Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
 
