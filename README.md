@@ -84,6 +84,8 @@ jobs:
 
 Don't forget to change the `url` `key` and `language` according to your project and Dependecy Track server. As you can see, we're using a secret to save our DT's user valid key. We strongly recommend you to do so.
 
+We also added an example of the `yaml` file which can be included in the workflow to use this action. You can find the file `example-action.yaml` in this repository.
+
 + Commit changes to your repository `.workflow` directory. Once you finish don't forget to save and commit. This will trigger the workflow is first run as it's configure to start on every push.
 
 **Step 3: Add CycloneDX plugin to your project (only Maven/Java projects)**
@@ -124,11 +126,7 @@ Paste the code shown above into the `plugins` secction of your project's pom.xml
 
 ![alt text](./cyclonedx-maven-plugin%20install.png)
 
-Before saving, you must change the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
-
-We also added an example of the `yaml` file which can be included in the workflow to use this action. You can fint the file in the `example-workflow` folder.
-
-For Maven projects, adding the [cyclonedx-maven-plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin) to your project is mandatory. This action will compile your project and expect to find a resulting `bom.xml`, which means you will also have to **change** the `phase` tag from `package` to `compile` inside the `executions` tag **cyclonedx-maven-plugin**.
+Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
 
 ## Development notes
 The repository files are mounted in the Dockerfile in `/github/workspace` directory. The script generates the BoM from those files and upload them to the OWASP Dependency Track specified as a parameter of the Action. After uploading the BoM it waits for the result and provides it as the output of the script. 
