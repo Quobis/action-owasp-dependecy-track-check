@@ -37,6 +37,7 @@ Please note that if any of the files above is not available the action will fail
 Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. However, we've add some of the steps you'll have to go through in order to get it up and running.
 
 **Step 1: Get your Dependency Track both URL and Key**
+
 This will let you use the API to upload your projects' bom.xml from this GitHub action.
 + How to get your Key. Go to Configuration -> Teams -> Create Team to create a new team. This will also create a corresponding API Key, although a team might have multiple Keys. You can find more info about this [here](https://docs.dependencytrack.org/integrations/rest-api/).
 
