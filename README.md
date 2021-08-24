@@ -74,8 +74,6 @@ Paste the code shown above into the `plugins` secction of your project's pom.xml
 
 ![alt text](./docs/cyclonedx-maven-plugin%20install.png)
 
-![alt text](./example-action.yaml)
-
 Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
 
 **Step 1: Get your Dependency Track both URL and Key**
@@ -129,7 +127,7 @@ Don't forget to change the `url` `key` and `language` according to your project 
 
 We also added an example of the `yaml` file which can be included in the workflow to use this action. You can find the file `example-action.yaml` in this repository.
 
-+ Commit changes to your repository `.workflow` directory. Once you finish don't forget to save and commit. This will trigger the workflow is first run as it's configure to start on every push.
++ Commit changes to your repository `.workflow` directory. Once you finish don't forget to save and commit. This will trigger the workflow is first run as it's configure to start on every push, and you'll be able to see the resault in your Dependency Track server.
 
 
 ## Development notes
