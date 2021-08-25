@@ -15,6 +15,7 @@ case $LANGUAGE in
     "nodejs")
         lscommand=$(ls)
         npm install
+        npm install -g @cyclonedx/bom
         echo "[*] Processing NodeJS BoM"
         npm install
         if [ ! $? = 0 ]; then
