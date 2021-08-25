@@ -23,7 +23,7 @@ case $LANGUAGE in
         fi
         npm install -g @cyclonedx/bom
         path="bom.xml"
-        BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
+        BoMResult=$(cyclonedx-bom -o bom.xml)
         ;;
     
     "python")
