@@ -16,7 +16,8 @@ case $LANGUAGE in
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
         npm install
-        npm audit fix
+        npm audit fix --force
+        npm install
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
@@ -27,7 +28,7 @@ case $LANGUAGE in
     
     "python")
         echo "[*]  Processing Python BoM"
-        apt-get install --no-install-recommends -y python3-dev python3-pip
+        apt-get install --no-install-recommends -y python3 python3-pip
         pip install cyclonedx-bom
         freeze=$(pip freeze > requirements.txt)
         if [ ! $? = 0 ]; then
@@ -122,7 +123,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@$path")
+--form "bom=@bom.xml")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
