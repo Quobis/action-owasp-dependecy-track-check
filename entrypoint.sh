@@ -16,6 +16,7 @@ case $LANGUAGE in
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
         npm install
+        npm audit fix
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
