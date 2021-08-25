@@ -6,8 +6,8 @@ ENV DEBIAN_FRONTEND noninteractive
 # using --no-install-recommends to reduce image size
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y git npm golang \
-    curl jq build-essential apt-transport-https unzip nodejs \
+    && apt-get install --no-install-recommends -y git nodejs npm golang \
+    curl jq build-essential apt-transport-https unzip \
     && curl -sS https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb \
     && apt-get update \

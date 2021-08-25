@@ -16,13 +16,10 @@ case $LANGUAGE in
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
         npm install
-        npm audit fix --force
-        npm install
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        npm install -g @cyclonedx/bom
         path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
@@ -30,13 +27,13 @@ case $LANGUAGE in
     "python")
         echo "[*]  Processing Python BoM"
         apt-get install --no-install-recommends -y python3 python3-pip
-        pip install cyclonedx-bom
         freeze=$(pip freeze > requirements.txt)
         if [ ! $? = 0 ]; then
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
-        path="requirements.txt"
+        pip install cyclonedx-bom
+        path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ls -la
         cat bom.xml
