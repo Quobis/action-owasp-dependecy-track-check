@@ -24,7 +24,8 @@ case $LANGUAGE in
         fi
         npm install -g @cyclonedx/bom
         path="bom.xml"
-        BoMResult=$(cyclonedx-bom -s 1.2 -o bom.xml)
+        cyclonedx-bom --help
+        BoMResult=$(cyclonedx-bom -o bom.xml)
         ;;
     
     "python")
@@ -115,6 +116,10 @@ if [ ! $? = 0 ]; then
 fi
 
 echo "[*] BoM file succesfully generated"
+# Cyclonedx CLI conversion 
+echo "PATH : $PATH"
+cyclonedx-linux-x64 --version
+cyclonedx-linux-x64 convert --input-file $path --input-format autodetect --output-file sbom.xml --output-format xml_v1_2
 
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
@@ -124,7 +129,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@$path")
+--form "bom=@sbom.xml")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
