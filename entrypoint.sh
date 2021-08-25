@@ -36,7 +36,7 @@ case $LANGUAGE in
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
-        path="bom.xml"
+        path="requirements.txt"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ls -la
         cat bom.xml
@@ -124,7 +124,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@bom.xml")
+--form "bom=@$path")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
