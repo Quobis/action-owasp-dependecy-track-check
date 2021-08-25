@@ -15,6 +15,7 @@ case $LANGUAGE in
     "nodejs")
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
+        apt-get install --no-install-recommends -y nodejs
         npm install
         npm audit fix --force
         if [ ! $? = 0 ]; then
@@ -82,7 +83,7 @@ case $LANGUAGE in
         fi
         path="bom.xml/bom.xml"
         dotnet tool install --global CycloneDX
-        apt update
+        apt-get update
         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
         # a directory which will be recursively analyzed for packages.config files
         BoMResult=$(dotnet CycloneDX . -o bom.xml)
