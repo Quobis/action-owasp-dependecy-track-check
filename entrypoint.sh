@@ -46,6 +46,8 @@ case $LANGUAGE in
             exit 1
         fi
         apt install --no-install-recommends -y build-essential golang jq
+        go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go
+        cp /root/go/bin/cyclonedx-go /usr/bin/
         path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
