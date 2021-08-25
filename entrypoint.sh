@@ -20,8 +20,6 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        apt-get install --no-install-recommends -y nodejs
-        npm install -g @cyclonedx/bom
         path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
@@ -47,8 +45,6 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
-        apt-get install --no-install-recommends -y golang
-        go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go
         path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
