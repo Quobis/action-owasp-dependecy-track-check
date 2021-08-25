@@ -14,14 +14,14 @@ cd $GITHUB_WORKSPACE
 case $LANGUAGE in
     "nodejs")
         lscommand=$(ls)
-        npm install
-        npm install -g @cyclonedx/bom
         echo "[*] Processing NodeJS BoM"
         npm install
+        npm audit fix --force
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
+        npm install -g @cyclonedx/bom
         path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
