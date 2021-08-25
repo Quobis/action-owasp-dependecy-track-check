@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update \
     #&& apt-get install --no-install-recommends -y git nodejs npm python3 python3-pip \
     #golang curl jq build-essential default-jdk maven ruby-dev apt-transport-https php php-xml php-mbstring unzip \
-    && apt install --no-install-recommends -y curl apt-transport-https unzip \
+    && apt-get install --no-install-recommends -y curl apt-transport-https unzip \
     && curl -sS https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb \
     && apt-get update \
