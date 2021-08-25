@@ -14,7 +14,6 @@ RUN apt-get update \
     && apt-get install -y dotnet-sdk-5.0
 
 # Installing Cyclone BoM generates for the different supported languages
-RUN npm install -g @cyclonedx/bom && pip install cyclonedx-bom
 
 #RUN mkdir /home/dtrack && cd /home/dtrack && git clone git@github.com:SCRATCh-ITEA3/dtrack-demonstrator.git
 
