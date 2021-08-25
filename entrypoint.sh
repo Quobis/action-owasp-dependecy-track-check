@@ -77,10 +77,10 @@ case $LANGUAGE in
         rm packages-microsoft-prod.deb
         apt-get update
         apt-get install -y dotnet-sdk-5.0
-        dotnet tool install --global CycloneDX
+        dotnet tool install --tool-path ~/.dotnet/tools CycloneDX
         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
         # a directory which will be recursively analyzed for packages.config files
-        BoMResult=$(dotnet CycloneDX . -o bom.xml)
+        BoMResult=$(dotnet ~/.dotnet/tools/CycloneDX . -o bom.xml)
         ;;
         
     "php")
