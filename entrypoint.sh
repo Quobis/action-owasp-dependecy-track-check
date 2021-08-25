@@ -14,6 +14,7 @@ cd $GITHUB_WORKSPACE
 case $LANGUAGE in
     "nodejs")
         lscommand=$(ls)
+        npm install
         echo "[*] Processing NodeJS BoM"
         npm install
         if [ ! $? = 0 ]; then
