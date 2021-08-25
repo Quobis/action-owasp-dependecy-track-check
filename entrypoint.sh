@@ -20,7 +20,7 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y build-essential nodejs
+        apt install --no-install-recommends -y nodejs
         npm install -g @cyclonedx/bom
         path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
@@ -28,15 +28,16 @@ case $LANGUAGE in
     
     "python")
         echo "[*]  Processing Python BoM"
-        apt install --no-install-recommends -y build-essential python3 python3-pip
+        apt install --no-install-recommends -y python3-dev python3-pip
+        pip install cyclonedx-bom
         freeze=$(pip freeze > requirements.txt)
         if [ ! $? = 0 ]; then
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
-        pip install cyclonedx-bom
         path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
+        cat bom.xml
         ;;
     
     "golang")
@@ -45,8 +46,9 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y build-essential golang jq
+        apt install --no-install-recommends -y golang
         go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go
+        sleep 5
         cp /root/go/bin/cyclonedx-go /usr/bin/
         path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
