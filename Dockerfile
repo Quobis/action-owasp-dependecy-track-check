@@ -17,9 +17,7 @@ RUN apt-get update \
 # Installing Cyclone BoM generates for the different supported languages
 
 #RUN mkdir /home/dtrack && cd /home/dtrack && git clone git@github.com:SCRATCh-ITEA3/dtrack-demonstrator.git
-RUN go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go && cp /root/go/bin/cyclonedx-go /usr/bin/ \
-    && curl -sS "https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.17.1/cyclonedx-linux-x64" -o cyclonedx-linux-x64 \
-    && chmod +x cyclonedx-linux-x64 && cp ./cyclonedx-linux-x64 /usr/bin/ 
+RUN go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go && cp /root/go/bin/cyclonedx-go /usr/bin/  
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
