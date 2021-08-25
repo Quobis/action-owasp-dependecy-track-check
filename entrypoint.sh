@@ -20,7 +20,7 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y nodejs
+        apt-get install --no-install-recommends -y nodejs
         npm install -g @cyclonedx/bom
         path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
@@ -28,7 +28,7 @@ case $LANGUAGE in
     
     "python")
         echo "[*]  Processing Python BoM"
-        apt install --no-install-recommends -y python3-dev python3-pip
+        apt-get install --no-install-recommends -y python3-dev python3-pip
         pip install cyclonedx-bom
         freeze=$(pip freeze > requirements.txt)
         if [ ! $? = 0 ]; then
@@ -46,7 +46,7 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y golang
+        apt-get install --no-install-recommends -y golang
         go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go
         sleep 5
         cp /root/go/bin/cyclonedx-go /usr/bin/
@@ -60,7 +60,7 @@ case $LANGUAGE in
             echo "[-] Error executing Ruby build. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y build-essential ruby-dev
+        apt-get install --no-install-recommends -y build-essential ruby-dev
         gem install cyclonedx-ruby
         path="bom.xml"
         BoMResult=$(cyclonedx-ruby -p ./ -o bom.xml)
@@ -72,7 +72,7 @@ case $LANGUAGE in
             echo "[-] Error executing Java build. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y build-essential default-jdk maven
+        apt-get install --no-install-recommends -y build-essential default-jdk maven
         path="target/bom.xml"
         BoMResult=$(mvn compile)
         ;;
@@ -97,7 +97,7 @@ case $LANGUAGE in
             echo "[-] Error executing Php build. Stopping the action!"
             exit 1
         fi
-        apt install --no-install-recommends -y build-essential php php-xml php-mbstring
+        apt-get install --no-install-recommends -y build-essential php php-xml php-mbstring
         curl -sS "https://getcomposer.org/installer" -o composer-setup.php
         php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer
         composer require --dev cyclonedx/cyclonedx-php-composer
