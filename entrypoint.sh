@@ -20,6 +20,8 @@ case $LANGUAGE in
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
+        apt install --no-install-recommends -y build-essential nodejs
+        npm install -g @cyclonedx/bom
         path="bom.xml"
         BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
         ;;
@@ -31,6 +33,8 @@ case $LANGUAGE in
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
+        apt install --no-install-recommends -y build-essential python3 python3-pip
+        pip install cyclonedx-bom
         path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ;;
@@ -41,6 +45,7 @@ case $LANGUAGE in
             echo "[-] Error executing go build. Stopping the action!"
             exit 1
         fi
+        apt install --no-install-recommends -y build-essential golang jq
         path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
@@ -51,6 +56,8 @@ case $LANGUAGE in
             echo "[-] Error executing Ruby build. Stopping the action!"
             exit 1
         fi
+        apt install --no-install-recommends -y build-essential ruby-dev
+        gem install cyclonedx-ruby
         path="bom.xml"
         BoMResult=$(cyclonedx-ruby -p ./ -o bom.xml)
         ;;
@@ -61,6 +68,7 @@ case $LANGUAGE in
             echo "[-] Error executing Java build. Stopping the action!"
             exit 1
         fi
+        apt install --no-install-recommends -y build-essential default-jdk maven
         path="target/bom.xml"
         BoMResult=$(mvn compile)
         ;;
@@ -72,15 +80,11 @@ case $LANGUAGE in
             exit 1
         fi
         path="bom.xml/bom.xml"
-        curl -sS https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-        dpkg -i packages-microsoft-prod.deb
-        rm packages-microsoft-prod.deb
-        apt-get update
-        apt-get install -y dotnet-sdk-5.0
-        dotnet tool install --tool-path ~/.dotnet/tools CycloneDX
+        dotnet tool install --global CycloneDX
+        apt update
         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
         # a directory which will be recursively analyzed for packages.config files
-        BoMResult=$(dotnet ~/.dotnet/tools/CycloneDX . -o bom.xml)
+        BoMResult=$(dotnet CycloneDX . -o bom.xml)
         ;;
         
     "php")
@@ -89,6 +93,7 @@ case $LANGUAGE in
             echo "[-] Error executing Php build. Stopping the action!"
             exit 1
         fi
+        apt install --no-install-recommends -y build-essential php php-xml php-mbstring
         curl -sS "https://getcomposer.org/installer" -o composer-setup.php
         php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer
         composer require --dev cyclonedx/cyclonedx-php-composer
