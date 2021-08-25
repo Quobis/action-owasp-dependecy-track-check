@@ -72,6 +72,11 @@ case $LANGUAGE in
             exit 1
         fi
         path="bom.xml/bom.xml"
+        curl -sS https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
+        dpkg -i packages-microsoft-prod.deb
+        rm packages-microsoft-prod.deb
+        apt-get update
+        apt-get install -y dotnet-sdk-5.0
         dotnet tool install --global CycloneDX
         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
         # a directory which will be recursively analyzed for packages.config files
@@ -84,6 +89,8 @@ case $LANGUAGE in
             echo "[-] Error executing Php build. Stopping the action!"
             exit 1
         fi
+        curl -sS "https://getcomposer.org/installer" -o composer-setup.php
+        php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer
         composer require --dev cyclonedx/cyclonedx-php-composer
         path="bom.xml"
         BoMResult=$(composer make-bom --spec-version="1.2")
