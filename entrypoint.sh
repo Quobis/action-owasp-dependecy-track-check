@@ -37,6 +37,7 @@ case $LANGUAGE in
         fi
         path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
+        ls -la
         cat bom.xml
         ;;
     
@@ -48,8 +49,6 @@ case $LANGUAGE in
         fi
         apt-get install --no-install-recommends -y golang
         go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go
-        sleep 5
-        cp /root/go/bin/cyclonedx-go /usr/bin/
         path="bom.xml"
         BoMResult=$(cyclonedx-go -o bom.xml)
         ;;
