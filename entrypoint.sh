@@ -118,9 +118,6 @@ fi
 echo "[*] BoM file succesfully generated"
 # Cyclonedx CLI conversion 
 echo "PATH : $PATH"
-curl -sS "https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.17.1/cyclonedx-linux-x64" -o cyclonedx-linux-x64
-chmod +x cyclonedx-linux-x64
-cp ./cyclonedx-linux-x64 /usr/bin/
 cyclonedx-linux-x64 --version
 cyclonedx-linux-x64 convert --input-file bom.xml --output-file sbom.xml --output-format xml_v1_2
 
