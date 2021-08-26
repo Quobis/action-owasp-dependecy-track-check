@@ -120,8 +120,13 @@ echo "[*] BoM file succesfully generated"
 echo "PATH : $PATH"
 /bin/bash --version
 cyclonedx-cli --version
+ls -la
+cat $path
+
 cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format xml_v1_2
 
+ls -la
+cat sbom.xml
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
 upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/api/v1/bom \
