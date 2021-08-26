@@ -19,8 +19,8 @@ RUN apt-get update \
 
 #RUN mkdir /home/dtrack && cd /home/dtrack && git clone git@github.com:SCRATCh-ITEA3/dtrack-demonstrator.git
 RUN go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go && cp /root/go/bin/cyclonedx-go /usr/bin/ \
-    && curl -sS "https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.17.1/cyclonedx-linux-arm" -o cyclonedx-cli \
-    && chmod +x cyclonedx-cli && cp ./cyclonedx-cli /usr/bin/ \
+    #&& curl -sS "https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.17.1/cyclonedx-linux-arm" -o cyclonedx-cli \
+    #&& chmod +x cyclonedx-cli && cp ./cyclonedx-cli /usr/bin/ \
     && curl -sS "https://github.com/CycloneDX/cyclonedx-cli/archive/refs/tags/v0.17.1.zip" && ls -la \
     && unzip v0.17.1.zip -d cyclonedx-cli && cd cyclonedx-cli && ls -la
     #&& chmod +x cyclonedx-cli && cp ./cyclonedx-cli /usr/bin/     
