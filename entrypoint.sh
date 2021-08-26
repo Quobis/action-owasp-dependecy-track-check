@@ -117,7 +117,7 @@ echo "[*] BoM file succesfully generated"
 
 # Cyclonedx CLI conversion
 echo "[*] Cyclonedx CLI conversion"
-cyclonedx-cli convert --input-file $path --input-format xml --output-file sbom.xml --output-format xml_v1_2
+cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json_v1_2
 
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
