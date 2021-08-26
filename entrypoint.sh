@@ -16,7 +16,6 @@ case $LANGUAGE in
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
         apt-get install --no-install-recommends -y nodejs
-        #npm install
         npm audit fix --force
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
@@ -117,6 +116,7 @@ echo "[*] BoM file succesfully generated"
 
 # Cyclonedx CLI conversion
 echo "[*] Cyclonedx CLI conversion"
+#Does not upload to dtrack when output format = xml (every version available)
 cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json_v1_2
 
 # UPLOAD BoM to Dependency track server
