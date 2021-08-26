@@ -118,8 +118,12 @@ fi
 echo "[*] BoM file succesfully generated"
 # Cyclonedx CLI conversion 
 echo "PATH : $PATH"
-cyclonedx-linux-x64.sh --version
-cyclonedx-linux-x64.sh convert --input-file $path --output-file sbom.xml --output-format xml_v1_2
+sh cyclonedx-linux-x64.sh --version
+bash cyclonedx-linux-x64.sh --version
+sudo sh cyclonedx-linux-x64.sh --version
+sudo bash cyclonedx-linux-x64.sh --version
+
+#cyclonedx-linux-x64.sh convert --input-file $path --output-file sbom.xml --output-format xml_v1_2
 
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
