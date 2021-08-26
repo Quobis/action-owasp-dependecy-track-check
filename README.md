@@ -3,7 +3,7 @@ This Github action generates a BoM (Bill Of Materials) of your project and uploa
 
 One of the main advantages is that you can customize the vulnerability check sources Dependency Track will use, you can easily check the project status of the different versions using the Dependency Track WUI and you can also check the licenses of the different libraries you project is using. 
 
-The project will be uploaded to the OWASP Dependency Track server using the repository name as `project` and the branch or tag name as `version`.
+The project will be uploaded to the OWASP Dependency Track server using the repository name as `project` and the branch or tag name as `version`. Its **BoM Format**, no matter which language it is, will be **v1.2**, supported by Dependecy Track v4.0.0 and higher. The conversion is made possible thanks to [CycloneDX CLI](https://github.com/CycloneDX/cyclonedx-cli) convert tool, which generates v1.2 BoM Formats both from languages plugins/modules which yet do not generate v1.2 BoM Formats, as well as from those languages which just generate v1.3 BoM Formats (not supported by our DT version). 
 
 We recommend to use the version tags to chose the specific action version which works fine in your workflow and OWASP Dependency Track version. However the main branch can also be used since we are not expecting to include breaking changes in future versions. 
 
@@ -74,7 +74,7 @@ Paste the code shown above into the `plugins` secction of your project's pom.xml
 
 ![alt text](./docs/cyclonedx-maven-plugin%20install.png)
 
-Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. You may also change other values such as the `<schemaVersion>` related to the resulting BoM Format version. 
+Note that you must **change** the `<phase>` tag value to `compile` (`package` by default), otherwise the action won't even generate the bom.xml. This action will compile your Maven Java project and expects to find a resulting `bom.xml`. 
 
 **Step 1: Get your Dependency Track both URL and Key**
 
