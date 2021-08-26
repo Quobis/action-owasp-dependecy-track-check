@@ -123,7 +123,7 @@ cyclonedx-cli --version
 ls -la
 cat $path
 
-cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format xml_v1_2
+cyclonedx-cli convert --input-file $path --output-file bom.xml --output-format xml_v1_2
 
 ls -la
 cat sbom.xml
