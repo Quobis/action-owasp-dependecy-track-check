@@ -126,7 +126,7 @@ cat $path
 cyclonedx-cli convert --input-file $path --output-file bom.xml --output-format xml_v1_2
 
 ls -la
-cat sbom.xml
+cat bom.xml
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
 upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/api/v1/bom \
@@ -135,7 +135,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@sbom.xml")
+--form "bom=@bom.xml")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
