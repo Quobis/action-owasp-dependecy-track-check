@@ -15,22 +15,28 @@ case $LANGUAGE in
     "nodejs")
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
+        apt-get install --no-install-recommends -y nodejs
         npm install
+        npm audit fix --force
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
+        npm install -g @cyclonedx/bom
         path="bom.xml"
-        BoMResult=$(cyclonedx-bom -s 1.1 -o bom.xml)
+        cyclonedx-bom --help
+        BoMResult=$(cyclonedx-bom -o bom.xml)
         ;;
     
     "python")
         echo "[*]  Processing Python BoM"
+        apt-get install --no-install-recommends -y python3 python3-pip
         freeze=$(pip freeze > requirements.txt)
         if [ ! $? = 0 ]; then
             echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
             exit 1
         fi
+        pip install cyclonedx-bom
         path="bom.xml"
         BoMResult=$(cyclonedx-py -o bom.xml)
         ;;
@@ -51,6 +57,8 @@ case $LANGUAGE in
             echo "[-] Error executing Ruby build. Stopping the action!"
             exit 1
         fi
+        apt-get install --no-install-recommends -y build-essential ruby-dev
+        gem install cyclonedx-ruby
         path="bom.xml"
         BoMResult=$(cyclonedx-ruby -p ./ -o bom.xml)
         ;;
@@ -61,6 +69,7 @@ case $LANGUAGE in
             echo "[-] Error executing Java build. Stopping the action!"
             exit 1
         fi
+        apt-get install --no-install-recommends -y build-essential default-jdk maven
         path="target/bom.xml"
         BoMResult=$(mvn compile)
         ;;
@@ -73,6 +82,7 @@ case $LANGUAGE in
         fi
         path="bom.xml/bom.xml"
         dotnet tool install --global CycloneDX
+        apt-get update
         # The path to a .sln, .csproj, .vbproj, or packages.config file or the path to 
         # a directory which will be recursively analyzed for packages.config files
         BoMResult=$(dotnet CycloneDX . -o bom.xml)
@@ -84,6 +94,9 @@ case $LANGUAGE in
             echo "[-] Error executing Php build. Stopping the action!"
             exit 1
         fi
+        apt-get install --no-install-recommends -y build-essential php php-xml php-mbstring
+        curl -sS "https://getcomposer.org/installer" -o composer-setup.php
+        php composer-setup.php --install-dir=/usr/bin --version=2.0.14 --filename=composer
         composer require --dev cyclonedx/cyclonedx-php-composer
         path="bom.xml"
         BoMResult=$(composer make-bom --spec-version="1.2")
@@ -102,6 +115,11 @@ fi
 
 echo "[*] BoM file succesfully generated"
 
+# Cyclonedx CLI conversion
+echo "[*] Cyclonedx CLI conversion"
+#Does not upload to dtrack when output format = xml (every version available)
+cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json_v1_2
+
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
 upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/api/v1/bom \
@@ -110,7 +128,7 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --form "autoCreate=true" \
 --form "projectName=$GITHUB_REPOSITORY" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@$path")
+--form "bom=@sbom.xml")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
