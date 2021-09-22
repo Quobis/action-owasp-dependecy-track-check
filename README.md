@@ -34,7 +34,7 @@ Please note that if any of the files above is not available the action will fail
 
 
 ## How to use it
-Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. However, we've add some of the steps you'll have to go through in order to get it up and running.
+Github provides really helpful resources to learn to include any action in your workflow. This [Introduction to actions](https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions) may be specially useful for beginners. However, we've add some of the steps you'll have to go through in order to get it up and running. You can also check this [video (OWASP Dependency Track check: how to use it in Maven projects)](https://www.youtube.com/watch?v=L9ItYhv37wo&t=3s).
 
 **Step 0: Add CycloneDX plugin to your project (only Maven/Java projects)**
 + Get the cyclonedx-maven-plugin. 
