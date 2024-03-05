@@ -137,6 +137,6 @@ The repository files are mounted in the Dockerfile in `/github/workspace` direct
 
 ## Acknowledgments
 
-This project was made possible thanks to [SCRATCh](https://scratch-itea3.eu/), an ITEA3 project.
+This project was made possible thanks to [SCRATCh](https://itea4.org/project/scratch.html), an ITEA3 project.
 
 Authors: [Antón Román](https://github.com/antonroman), [Manuel Alonso](https://github.com/macarracedo).
