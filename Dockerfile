@@ -20,7 +20,7 @@ RUN apt-get update \
 #RUN mkdir /home/dtrack && cd /home/dtrack && git clone git@github.com:SCRATCh-ITEA3/dtrack-demonstrator.git
 RUN go mod init deptrack/main
 RUN go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go && cp /root/go/bin/cyclonedx-go /usr/bin/
-run rm go.mod
+RUN rm go.mod
 
 COPY cyclonedx-linux-x64 /usr/bin/cyclonedx-cli
 RUN chmod +x /usr/bin/cyclonedx-cli
