@@ -65,6 +65,8 @@ case $LANGUAGE in
 
     "java")
         echo "[*]  Processing Java BoM"
+        ls
+        pwd
         if [ ! $? = 0 ]; then
             echo "[-] Error executing Java build. Stopping the action!"
             echo "$?"
