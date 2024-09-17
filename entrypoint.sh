@@ -71,7 +71,7 @@ case $LANGUAGE in
         fi
         apt-get install --no-install-recommends -y build-essential default-jdk maven
         path="target/bom.xml"
-        BoMResult=$(mvn compile)
+        BoMResult=$(mvn package -DskipUT=true)
         ;;
         
     "dotnet")
