@@ -9,6 +9,10 @@ output=""
 INSECURE="--insecure"
 #VERBOSE="--verbose"
 
+wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
+cp cyclonedx-linux-x64 /usr/bin/cyclonedx-cli
+chmod +x /usr/bin/cyclonedx-cli
+
 cd $GITHUB_WORKSPACE
 
 # Loop through each path
@@ -25,6 +29,7 @@ for path in $PATHS; do
     # Cyclonedx CLI conversion
     echo "[*] Cyclonedx CLI conversion for $bom_file"
     cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format json_v1_4
+    # cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json --output-version v1_4
 
     # UPLOAD BoM to Dependency Track server
     echo "[*] Uploading BoM file for $bom_file to Dependency Track server"

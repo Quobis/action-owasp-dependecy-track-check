@@ -18,13 +18,12 @@ RUN apt-get update \
 # Installing Cyclone BoM generates for the different supported languages
 
 #RUN mkdir /home/dtrack && cd /home/dtrack && git clone git@github.com:SCRATCh-ITEA3/dtrack-demonstrator.git
-RUN go mod init deptrack/main
-RUN go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go && cp /root/go/bin/cyclonedx-go /usr/bin/
-RUN rm go.mod
+# RUN go mod init deptrack/main
+# RUN go get github.com/ozonru/cyclonedx-go/cmd/cyclonedx-go && cp /root/go/bin/cyclonedx-go /usr/bin/
+# RUN rm go.mod
 
-COPY cyclonedx-linux-x64 /usr/bin/cyclonedx-cli
-# COPY --from=eclipse-temurin:17 /opt/java/openjdk /opt/java/java17
-RUN chmod +x /usr/bin/cyclonedx-cli
+# COPY cyclonedx-linux-x64 /usr/bin/cyclonedx-cli
+# RUN chmod +x /usr/bin/cyclonedx-cli
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
