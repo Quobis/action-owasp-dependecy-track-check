@@ -46,8 +46,6 @@ for path in $PATHS; do
     echo "[*] BoM file successfully generated at $bom_file"
     pwd
     ls 
-    ls target
-    ls $bom_file
 
     # Cyclonedx CLI conversion
     echo "[*] Cyclonedx CLI conversion for $path"
