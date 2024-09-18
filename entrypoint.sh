@@ -29,7 +29,7 @@ for path in $PATHS; do
 
     # Cyclonedx CLI conversion
     echo "[*] Cyclonedx CLI conversion for $bom_file"
-    cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format json_v1_4
+    cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format v1_4
     # cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json --output-version v1_4
     ls
 
