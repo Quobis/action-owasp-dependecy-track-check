@@ -11,6 +11,8 @@ INSECURE="--insecure"
 
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
+apt-get install --no-install-recommends -y build-essential default-jdk maven
+
 cd $GITHUB_WORKSPACE
 
 # Loop through each path
@@ -28,7 +30,6 @@ for path in $PATHS; do
 
             # Go to the project path and build using Maven
             cd "$path"
-            apt-get install --no-install-recommends -y build-essential default-jdk maven
             BoMResult=$(mvn package -DskipUT=true)
             bom_file="$path/target/bom.xml"
             ;;
