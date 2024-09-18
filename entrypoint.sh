@@ -9,66 +9,30 @@ output=""
 INSECURE="--insecure"
 #VERBOSE="--verbose"
 
-# Access directory where GitHub will mount the repository code
-# $GITHUB_ variables are directly accessible in the script
-# export JAVA_HOME="/opt/java/java17"
-# export PATH=${JAVA_HOME}/bin:$PATH
-
-# apt-get update -y
-# apt-get install --no-install-recommends -y build-essential default-jdk maven
-# echo "[*] JAVA version:"
-# java -version
-# echo "[*] MAVEN version:"
-# mvn -version
-
 cd $GITHUB_WORKSPACE
 
 # Loop through each path
 for path in $PATHS; do
     echo "[*] Processing path: $path"
 
-    # Ensure the project is Java-based
-    case $LANGUAGE in
-        "java")
-            echo "[*]  Processing Java BoM for $path"
-            if [ ! $? = 0 ]; then
-                echo "[-] Error executing Java build. Stopping the action!"
-                exit 1
-            fi
-
-            # Go to the project path and build using Maven
-            cd "$path"
-            # mvn package -DskipUT=true
-            # BoMResult=$(mvn package -DskipUT=true)
-            bom_file="$path/target/bom.xml"
-            ;;
-        *)
-            echo "[-] Project type not supported: $LANGUAGE"
-            exit 1
-            ;;
-    esac    
-
-    if [ ! $? = 0 ]; then
-        echo "[-] Error generating BoM file in path $path: $BoMResult. Stopping the action!"
-        exit 1
-    fi
+    cd "$path"
+    bom_file="$path/target/bom.xml"
 
     echo "[*] BoM file successfully generated at $bom_file"
-    pwd
-    ls 
+    ls -ll $bom_file
 
     # Cyclonedx CLI conversion
-    echo "[*] Cyclonedx CLI conversion for $path"
+    echo "[*] Cyclonedx CLI conversion for $bom_file"
     cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format json_v1_2
 
     # UPLOAD BoM to Dependency Track server
-    echo "[*] Uploading BoM file for $path to Dependency Track server"
+    echo "[*] Uploading BoM file for $bom_file to Dependency Track server"
     upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/api/v1/bom \
     --header "X-Api-Key: $DTRACK_KEY" \
     --header "Content-Type: multipart/form-data" \
     --form "autoCreate=true" \
     --form "projectName=$GITHUB_REPOSITORY-$path" \
-    --form "projectVersion=$GITHUB_REF" \
+    --form "projectVersion=$GITHUB_REF$path" \
     --form "bom=@sbom.json")
 
     token=$(echo $upload_bom | jq ".token" | tr -d "\"")
@@ -103,11 +67,11 @@ for path in $PATHS; do
     project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY-$path&version=$GITHUB_REF" \
     --header "X-Api-Key: $DTRACK_KEY")
 
-    echo "$project"
+    echo "[*] Project: $project"
 
     project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
     risk_score=$(echo $project | jq ".lastInheritedRiskScore")
-    echo "Project risk score for $path: $risk_score"
+    echo "[*] Project risk score for $path: $risk_score"
 
     # Append this path and its risk score to the output string
     output="${output}Path: $path, Risk Score: $risk_score\n"
