@@ -11,9 +11,9 @@ INSECURE="--insecure"
 
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
-# apt-get install --no-install-recommends -y build-essential default-jdk maven
+apt-get install --no-install-recommends -y build-essential default-jdk maven
+mvn -version
 
-apt-get install --no-install-recommends -y build-essential
 cd $GITHUB_WORKSPACE
 
 # Loop through each path
