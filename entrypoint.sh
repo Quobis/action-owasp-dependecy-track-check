@@ -11,15 +11,15 @@ INSECURE="--insecure"
 
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
-export JAVA_HOME="/opt/java/java17"
-export PATH=${JAVA_HOME}/bin:$PATH
+# export JAVA_HOME="/opt/java/java17"
+# export PATH=${JAVA_HOME}/bin:$PATH
 
-apt-get update -y
-apt-get install --no-install-recommends -y build-essential default-jdk maven
-echo "[*] JAVA version:"
-java -version
-echo "[*] MAVEN version:"
-mvn -version
+# apt-get update -y
+# apt-get install --no-install-recommends -y build-essential default-jdk maven
+# echo "[*] JAVA version:"
+# java -version
+# echo "[*] MAVEN version:"
+# mvn -version
 
 cd $GITHUB_WORKSPACE
 
@@ -38,8 +38,8 @@ for path in $PATHS; do
 
             # Go to the project path and build using Maven
             cd "$path"
-            mvn package -DskipUT=true
-            BoMResult=$(mvn package -DskipUT=true)
+            # mvn package -DskipUT=true
+            # BoMResult=$(mvn package -DskipUT=true)
             bom_file="$path/target/bom.xml"
             ;;
         *)
