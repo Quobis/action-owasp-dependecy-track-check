@@ -11,6 +11,7 @@ INSECURE="--insecure"
 
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
+export JAVA_HOME="/opt/java/java17"
 apt-get update -y
 apt-get install --no-install-recommends -y build-essential default-jdk maven
 echo "[*] JAVA version:"
