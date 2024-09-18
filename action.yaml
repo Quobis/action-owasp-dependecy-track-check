@@ -18,6 +18,10 @@ inputs:
     description: 'Programming language'
     required: true
     default: 'nodejs'
+  paths:
+    description: 'Array of paths to specific files or directories to be analyzed'
+    required: false
+    default: '[]'
 
 outputs:
   riskscore:
@@ -30,4 +34,5 @@ runs:
     - ${{ inputs.url }}
     - ${{ inputs.key }}
     - ${{ inputs.language }}
+    - ${{ inputs.paths }}
 
