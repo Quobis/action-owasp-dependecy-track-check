@@ -30,7 +30,7 @@ for path in $PATHS; do
             cd "$path"
             apt-get install --no-install-recommends -y build-essential default-jdk maven
             BoMResult=$(mvn package -DskipUT=true)
-            bom_file="target/bom.xml"
+            bom_file="$path/target/bom.xml"
             ;;
         *)
             echo "[-] Project type not supported: $LANGUAGE"
@@ -44,6 +44,10 @@ for path in $PATHS; do
     fi
 
     echo "[*] BoM file successfully generated at $bom_file"
+    pwd
+    ls 
+    ls target
+    ls $bom_file
 
     # Cyclonedx CLI conversion
     echo "[*] Cyclonedx CLI conversion for $path"
