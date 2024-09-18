@@ -20,10 +20,11 @@ for path in $PATHS; do
 
     echo "[*] BoM file successfully generated at $bom_file"
     ls -ll $bom_file
+    head $bom_file
 
     # Cyclonedx CLI conversion
     echo "[*] Cyclonedx CLI conversion for $bom_file"
-    cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format json_v1_2
+    cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format json_v1_4
 
     # UPLOAD BoM to Dependency Track server
     echo "[*] Uploading BoM file for $bom_file to Dependency Track server"
