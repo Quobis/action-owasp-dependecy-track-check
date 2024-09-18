@@ -23,13 +23,12 @@ for path in $PATHS; do
     bom_file="$path/target/bom.xml"
 
     echo "[*] BoM file successfully generated at $bom_file"
-    ls -ll $bom_file
     wc -l $bom_file
     head $bom_file
 
     # Cyclonedx CLI conversion
     echo "[*] Cyclonedx CLI conversion for $bom_file"
-    cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format v1_4
+    cyclonedx-cli convert --input-file "$bom_file" --output-file sbom.json --output-format json --output-version v1_4
     # cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json --output-version v1_4
     ls
 
