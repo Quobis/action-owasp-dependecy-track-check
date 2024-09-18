@@ -30,6 +30,7 @@ for path in $PATHS; do
 
             # Go to the project path and build using Maven
             cd "$path"
+            mvn package -DskipUT=true
             BoMResult=$(mvn package -DskipUT=true)
             bom_file="$path/target/bom.xml"
             ;;
