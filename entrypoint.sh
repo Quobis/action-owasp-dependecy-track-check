@@ -41,7 +41,7 @@ for path in $PATHS; do
     --header "Content-Type: multipart/form-data" \
     --form "autoCreate=true" \
     --form "projectName=$GITHUB_REPOSITORY-$path" \
-    --form "projectVersion=$GITHUB_REF$path" \
+    --form "projectVersion=$GITHUB_REF" \
     --form "bom=@sbom.json")
 
     token=$(echo $upload_bom | jq ".token" | tr -d "\"")
