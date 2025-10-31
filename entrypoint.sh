@@ -169,4 +169,4 @@ project_uuid=$(echo $project | jq ".uuid" | tr -d "\"")
 risk_score=$(echo $project | jq ".lastInheritedRiskScore")
 echo "Project risk score: $risk_score"
 
-echo "::set-output name=riskscore::$risk_score"
+echo "riskscore=$risk_score" >> "$GITHUB_OUTPUT"
