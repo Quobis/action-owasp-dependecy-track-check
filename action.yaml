@@ -2,11 +2,11 @@
 name: 'OWASP Dependency Track check'
 description: 'Creates BoM and upload repository to OWASP Dependency Track to find vulnerabilities'
 branding:
-  icon: 'check-square'  
+  icon: 'check-square'
   color: 'green'
 
 inputs:
-  url:  
+  url:
     description: 'URL of OWASP Dependency Track REST API'
     required: true
     default: 'https://dtrack.quobis.com/'
@@ -18,6 +18,9 @@ inputs:
     description: 'Programming language'
     required: true
     default: 'nodejs'
+  version:
+    description: 'Version to send to Dependency Track (defaults to git ref)'
+    required: false
 
 outputs:
   riskscore:
@@ -30,4 +33,5 @@ runs:
     - ${{ inputs.url }}
     - ${{ inputs.key }}
     - ${{ inputs.language }}
+    - ${{ inputs.version }}
 
