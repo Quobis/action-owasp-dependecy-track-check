@@ -3,42 +3,88 @@
 DTRACK_URL=$1
 DTRACK_KEY=$2
 LANGUAGE=$3
+DIRECTORY="${4:-.}"
+NODE_VERSION="${5:-22.14.0}"
 
+DEPTRACK_RETRIES_TIMEOUT=50
 INSECURE="--insecure"
-#VERBOSE="--verbose"
+VERBOSE="--verbose"
 
 # Access directory where GitHub will mount the repository code
 # $GITHUB_ variables are directly accessible in the script
 cd $GITHUB_WORKSPACE
 
+# for monorepos : change directory to a sub directory specified by the user
+cd "$GITHUB_WORKSPACE/$DIRECTORY" || { echo "[-] Directory not found: $DIRECTORY"; exit 1; }
+
+# for monorepos : change project name with sub-directory
+DIRECTORY_NAME_CLEAN=$(echo "$DIRECTORY" | sed -e 's#^\(\./\)*##' -e 's#/*$##')
+if [ -z "$DIRECTORY_NAME_CLEAN" ] || [ "$DIRECTORY_NAME_CLEAN" = "." ]; then
+    PROJECT_NAME="$GITHUB_REPOSITORY"
+else
+    PROJECT_NAME="$GITHUB_REPOSITORY-$DIRECTORY_NAME_CLEAN"
+    echo "[*] Using Dependency Track project : $PROJECT_NAME"
+fi
+
+# Validate node version
+case "$NODE_VERSION" in
+    ""|*[!0-9.]*) echo "[-] Invalid node_version: $NODE_VERSION"; exit 1 ;;
+esac
+
+install_specific_node_version() {
+    (
+        cd /tmp \
+        && curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" \
+        && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt" \
+           | grep " node-v${NODE_VERSION}-linux-x64.tar.xz\$" | sha256sum -c - \
+        && tar -xJf "node-v${NODE_VERSION}-linux-x64.tar.xz" -C /usr/local --strip-components=1
+    ) || { echo "[-] Node.js installation failed. Stopping the action!"; exit 1; }
+}
+
 case $LANGUAGE in
-    "nodejs")
+    "nodejs"|"npm")
         lscommand=$(ls)
         echo "[*] Processing NodeJS BoM"
-        apt-get install --no-install-recommends -y nodejs
+        install_specific_node_version
         npm install
-        npm audit fix --force
         if [ ! $? = 0 ]; then
             echo "[-] Error executing npm install. Stopping the action!"
             exit 1
         fi
-        npm install -g @cyclonedx/bom
+        npm install -g @cyclonedx/cyclonedx-npm
         path="bom.xml"
-        cyclonedx-bom --help
-        BoMResult=$(cyclonedx-bom -o bom.xml)
+        cyclonedx-npm --help
+        BoMResult=$(cyclonedx-npm --output-format XML --output-file bom.xml)
+        ;;
+
+    "npm-ci")
+        lscommand=$(ls)
+        echo "[*] Processing NodeJS BoM"
+        install_specific_node_version
+        # npm clean-install --ignore-scripts
+        # if [ ! $? = 0 ]; then
+        #     echo "[-] Error executing npm install. Stopping the action!"
+        #     exit 1
+        # fi
+        [ -f package-lock.json ] || { echo "[-] package-lock.json not found. Stopping the action!"; exit 1; }
+        npm install -g @cyclonedx/cyclonedx-npm
+        path="bom.xml"
+        cyclonedx-npm --help
+        BoMResult=$(cyclonedx-npm --output-format XML --output-file bom.xml --package-lock-only)
         ;;
     
     "python")
         echo "[*]  Processing Python BoM"
         apt-get install --no-install-recommends -y python3 python3-pip
-        freeze=$(pip freeze > requirements.txt)
-        if [ ! $? = 0 ]; then
-            echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
-            exit 1
-        fi
-        pip install cyclonedx-bom
+        # freeze=$(pip freeze > requirements.txt)
+        # if [ ! $? = 0 ]; then
+        #     echo "[-] Error executing pip freeze to get a requirements.txt with frozen parameters. Stopping the action!"
+        #     exit 1
+        # fi
+        # this is acceptable because the container will be thrown away, otherwise ubuntu noble will not let a pip install without virtualenv
+        pip install --break-system-packages cyclonedx-bom 
         path="bom.xml"
-        BoMResult=$(cyclonedx-py requirements -o bom.xml)
+        BoMResult=$(cyclonedx-py requirements --output-format XML -o bom.xml)
         ;;
     
     "golang")
@@ -103,7 +149,7 @@ case $LANGUAGE in
         ;;
 
     *)
-        "[-] Project type not supported: $LANGUAGE"
+        echo "[-] Project type not supported: $LANGUAGE"
         exit 1
         ;;
 esac    
@@ -115,10 +161,14 @@ fi
 
 echo "[*] BoM file succesfully generated"
 
+if [ -z $VERBOSE ]; then
+    cat $BomResult
+fi
+
 # Cyclonedx CLI conversion
 echo "[*] Cyclonedx CLI conversion"
 #Does not upload to dtrack when output format = xml (every version available)
-cyclonedx-cli convert --input-file $path --output-file sbom.xml --output-format json_v1_2
+cyclonedx-cli convert --input-file $path --input-format xml --output-file sbom.json --output-format json --output-version v1_5  || { echo "[-] CycloneDX CLI conversion failed. Stopping the action!"; exit 1; }
 
 # UPLOAD BoM to Dependency track server
 echo "[*] Uploading BoM file to Dependency Track server"
@@ -126,9 +176,9 @@ upload_bom=$(curl $INSECURE $VERBOSE -s --location --request POST $DTRACK_URL/ap
 --header "X-Api-Key: $DTRACK_KEY" \
 --header "Content-Type: multipart/form-data" \
 --form "autoCreate=true" \
---form "projectName=$GITHUB_REPOSITORY" \
+--form "projectName=$PROJECT_NAME" \
 --form "projectVersion=$GITHUB_REF" \
---form "bom=@sbom.xml")
+--form "bom=@sbom.json")
 
 token=$(echo $upload_bom | jq ".token" | tr -d "\"")
 echo "[*] BoM file succesfully uploaded with token $token"
@@ -144,11 +194,12 @@ processing=$(curl $INSECURE $VERBOSE -s --location --request GET $DTRACK_URL/api
 --header "X-Api-Key: $DTRACK_KEY" | jq '.processing')
 
 
-while [ $processing = true ]; do
+while [ "$processing" = "true" ]; do
     sleep 5
     processing=$(curl  $INSECURE $VERBOSE -s --location --request GET $DTRACK_URL/api/v1/bom/token/$token \
 --header "X-Api-Key: $DTRACK_KEY" | jq '.processing')
-    if [ $((++c)) -eq 10 ]; then
+    c=$((c + 1))
+    if [ "$c" -eq $DEPTRACK_RETRIES_TIMEOUT ]; then
         echo "[-]  Timeout while waiting for processing result. Please check the OWASP Dependency Track status."
         exit 1
     fi
@@ -160,7 +211,9 @@ echo "[*] OWASP Dependency Track processing completed"
 sleep 5
 
 echo "[*] Retrieving project information"
-project=$(curl  $INSECURE $VERBOSE -s --location --request GET "$DTRACK_URL/api/v1/project/lookup?name=$GITHUB_REPOSITORY&version=$GITHUB_REF" \
+project=$(curl  $INSECURE $VERBOSE -s --location --get "$DTRACK_URL/api/v1/project/lookup" \
+--data-urlencode "name=$PROJECT_NAME" \
+--data-urlencode "version=$GITHUB_REF" \
 --header "X-Api-Key: $DTRACK_KEY")
 
 echo "$project"
